@@ -5,6 +5,8 @@ import { useActions, useProps } from '../hooks';
 import { AppButton } from '../components';
 import { SceneNames } from '../utilities/screenNames';
 import SplashScreen from "react-native-lottie-splash-screen";
+import { Formik } from 'formik';
+import * as yup from 'yup'
 
 interface IProps extends NavigationComponentProps {
 
@@ -22,30 +24,72 @@ export const LoginScreen: NavigationFunctionComponent<IProps> = (props) => {
     setTimeout(() => SplashScreen.hide(), 3000)
   }, []);
 
+  const loginValidationSchema = yup.object().shape({
+    email: yup
+      .string()
+      .email('Please enter valid email')
+      .required('Email Address is Required'),
+    password: yup
+      .string()
+      .min(6, ({ min }) => `Password must be at lease ${min} characters`)
+      .required('Password is required')
+  })
+
   return (
     <View style={styles.container}>
-      <Text style={styles.signInText}>
+      {/* <Text style={styles.signInText}>
         Login To Manage The Store
-      </Text>
-      <View style={styles.InputWrapper}>
-        <TextInput
-          placeholder='Email'
-          style={styles.textInputStyle}
-        />
-      </View>
+      </Text> */}
+      <Formik
+        validationSchema={loginValidationSchema}
+        initialValues={{ email: '', password: '' }}
+        onSubmit={values => console.log(values)}
+      >{({
+        handleChange,
+        handleBlur,
+        handleSubmit,
+        values,
+        errors,
+        isValid
+      }) => (
+        <>
+          <View style={styles.InputWrapper}>
+            <TextInput
+              placeholder='Email Address'
+              style={styles.textInputStyle}
+              onChangeText={handleChange('email')}
+              onBlur={handleBlur('email')}
+              value={values.email}
+              keyboardType='email-address'
+            />
+            {errors.email &&
+              <Text style={styles.errorTextStyle}>{errors.email}</Text>
+            }
+          </View>
 
-      <View style={styles.InputWrapper}>
-        <TextInput
-          placeholder='*******'
-          secureTextEntry
-          style={styles.textInputStyle}
-        />
-      </View>
-      <AppButton
-        title='Login'
-        buttonContainerStyle={styles.buttonContainerStyle}
-        onPress={() => null}
-      />
+          <View style={styles.InputWrapper}>
+            <TextInput
+              placeholder='*******'
+              style={styles.textInputStyle}
+              onChangeText={handleChange('password')}
+              onBlur={handleBlur('password')}
+              value={values.password}
+              secureTextEntry
+            />
+            {errors.password &&
+              <Text style={styles.errorTextStyle}>{errors.password}</Text>
+            }
+          </View>
+
+          <AppButton
+            title='Login'
+            buttonContainerStyle={styles.buttonContainerStyle}
+            onPress={handleSubmit}
+          />
+        </>
+      )}
+
+      </Formik>
     </View>
   )
 }
@@ -113,5 +157,11 @@ const styles = StyleSheet.create({
   signInText: {
     fontSize: 20,
     marginBottom: 15
+  } as TextStyle,
+  errorTextStyle: {
+    fontSize: 10,
+    color: 'red',
+    paddingLeft: 10,
+    paddingBottom: 5
   } as TextStyle
 });

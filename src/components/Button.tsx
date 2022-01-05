@@ -23,15 +23,18 @@ interface IProps {
    * @type {ViewStyle}
    * @memberof IProps
    */
-  buttonContainerStyle?: ViewStyle
+  buttonContainerStyle?: ViewStyle,
+
+  isDisabled?: boolean
 }
 
 export const AppButton: React.FC<IProps> = props => {
-  const { onPress, title, buttonContainerStyle } = props;
+  const { onPress, title, buttonContainerStyle, isDisabled } = props;
   return (
     <TouchableOpacity
-      style={[styles.container, buttonContainerStyle]}
+      style={[styles.container, buttonContainerStyle, isDisabled && { backgroundColor: '#D3D3D3' }]}
       onPress={onPress}
+      disabled={isDisabled}
     >
       <Text style={styles.title}>
         {title}

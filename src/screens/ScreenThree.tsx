@@ -30,7 +30,7 @@ export const ScreenThree: NavigationFunctionComponent<IProps> = (props) => {
   const onDetailButtonPress = () => {
     Navigation.push(componentId, {
       component: {
-        name: SceneNames.ScreenOne
+        name: SceneNames.LoginScreen
       }
     })
   }

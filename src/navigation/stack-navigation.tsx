@@ -2,11 +2,23 @@ import React from 'react';
 import {
   ScreenOne,
   ScreenTwo,
+  LoginScreen
 } from '../screens';
 import { Provider } from 'react-redux';
 import { Navigation, LayoutStack } from 'react-native-navigation';
 import { SceneNames } from '../utilities/screenNames';
 import { store } from '../states/store';
+
+Navigation.registerComponent(
+  SceneNames.LoginScreen,
+  () => props =>
+  (
+    <Provider store={store}>
+      <LoginScreen {...props} />
+    </Provider>
+  ),
+  () => LoginScreen,
+);
 
 Navigation.registerComponent(
   SceneNames.ScreenOne,
@@ -18,6 +30,7 @@ Navigation.registerComponent(
   ),
   () => ScreenOne,
 );
+
 
 Navigation.registerComponent(
   SceneNames.ScreenTwo,
@@ -32,6 +45,11 @@ Navigation.registerComponent(
 
 export const stackNavigation: LayoutStack = {
   children: [
+    {
+      component: {
+        name: SceneNames.LoginScreen
+      }
+    },
     {
       component: {
         name: SceneNames.ScreenOne

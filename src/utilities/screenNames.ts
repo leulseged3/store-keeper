@@ -3,5 +3,6 @@ export const enum SceneNames {
   ScreenTwo = 'ScreenTwo',
   ScreenThree = 'ScreenThree',
   ScreenFour = 'ScreenFour',
-  ScreenFive = 'ScreenFive'
+  ScreenFive = 'ScreenFive',
+  LoginScreen = 'LoginScreen'
 }

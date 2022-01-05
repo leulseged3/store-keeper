@@ -50,7 +50,8 @@ export const LoginScreen: NavigationFunctionComponent<IProps> = (props) => {
         handleSubmit,
         values,
         errors,
-        isValid
+        isValid,
+        touched
       }) => (
         <>
           <View style={styles.InputWrapper}>
@@ -62,7 +63,7 @@ export const LoginScreen: NavigationFunctionComponent<IProps> = (props) => {
               value={values.email}
               keyboardType='email-address'
             />
-            {errors.email &&
+            {(errors.email && touched.email) &&
               <Text style={styles.errorTextStyle}>{errors.email}</Text>
             }
           </View>
@@ -76,7 +77,7 @@ export const LoginScreen: NavigationFunctionComponent<IProps> = (props) => {
               value={values.password}
               secureTextEntry
             />
-            {errors.password &&
+            {(errors.password && touched.email) &&
               <Text style={styles.errorTextStyle}>{errors.password}</Text>
             }
           </View>
@@ -85,6 +86,7 @@ export const LoginScreen: NavigationFunctionComponent<IProps> = (props) => {
             title='Login'
             buttonContainerStyle={styles.buttonContainerStyle}
             onPress={handleSubmit}
+            isDisabled={!isValid}
           />
         </>
       )}

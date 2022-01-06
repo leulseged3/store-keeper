@@ -7,18 +7,19 @@ import { SceneNames } from '../utilities/screenNames';
 import SplashScreen from "react-native-lottie-splash-screen";
 import { Formik } from 'formik';
 import * as yup from 'yup'
+import { login } from '../api/login';
 
 interface IProps extends NavigationComponentProps {
 
 }
 
-export const LoginScreen: NavigationFunctionComponent<IProps> = (props) => {
-  const { componentId } = props
-  const { currentLanguage, translation } = useProps(state => state.Language);
-  const { Language } = useActions();
+export const LoginComponent: NavigationFunctionComponent<IProps> = (props) => {
+  const { componentId } = props;
+  const [isLoading, setIsLoading] = useState(false);
+  const [loginError, setLoginError] = useState(false);
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('')
+  const { Auth } = useProps(state => state);
+  const actions = useActions();
 
   useEffect(() => {
     setTimeout(() => SplashScreen.hide(), 3000)
@@ -33,17 +34,33 @@ export const LoginScreen: NavigationFunctionComponent<IProps> = (props) => {
       .string()
       .min(6, ({ min }) => `Password must be at lease ${min} characters`)
       .required('Password is required')
-  })
+  });
+
+  const handleLogin = (values: { email: string, password: string }) => {
+    console.log('val')
+    setIsLoading(true)
+    login(values.email, values.password)
+      .then(res => actions.Auth.setAuth({ ...res, token: res.access_token }))
+      // .then(() => Navigation.setStackRoot(componentId, {
+      //   component: {
+      //     name: SceneNames.ScreenFive
+      //   }
+      // }))
+      .catch(err => {
+        setIsLoading(false);
+        setLoginError(true)
+      })
+  }
 
   return (
     <View style={styles.container}>
-      {/* <Text style={styles.signInText}>
+      <Text style={styles.signInText}>
         Login To Manage The Store
-      </Text> */}
+      </Text>
       <Formik
         validationSchema={loginValidationSchema}
         initialValues={{ email: '', password: '' }}
-        onSubmit={values => console.log(values)}
+        onSubmit={values => handleLogin(values)}
       >{({
         handleChange,
         handleBlur,
@@ -87,10 +104,10 @@ export const LoginScreen: NavigationFunctionComponent<IProps> = (props) => {
             buttonContainerStyle={styles.buttonContainerStyle}
             onPress={handleSubmit}
             isDisabled={!isValid}
+            isLoading={isLoading}
           />
         </>
       )}
-
       </Formik>
     </View>
   )

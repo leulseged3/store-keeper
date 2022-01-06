@@ -1,11 +1,12 @@
-/** 
- * Every Api response interface should be written in this declaration file.
- * as example below
- * NO import/export is allowed in declaration file.
-*/
-
-declare interface IBlogExampleResponse {
-  title: string;
-  author: string;
-  tags: string[];
+declare interface ILoginResponse {
+  firstName: string;
+  lastName: string;
+  email: string;
+  access_token: string;
+}
+declare interface IRecord {
+  _id: string,
+  itemName: string,
+  price: number,
+  isApproved: boolean,
 }

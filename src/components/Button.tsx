@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, StyleSheet, ViewStyle, TouchableOpacity, TextStyle } from 'react-native';
+import { Text, StyleSheet, ViewStyle, TouchableOpacity, TextStyle, ActivityIndicator } from 'react-native';
 
 interface IProps {
   /**
@@ -23,13 +23,15 @@ interface IProps {
    * @type {ViewStyle}
    * @memberof IProps
    */
-  buttonContainerStyle?: ViewStyle,
+  buttonContainerStyle?: ViewStyle;
 
-  isDisabled?: boolean
+  isDisabled?: boolean;
+
+  isLoading?: boolean;
 }
 
 export const AppButton: React.FC<IProps> = props => {
-  const { onPress, title, buttonContainerStyle, isDisabled } = props;
+  const { onPress, title, buttonContainerStyle, isDisabled, isLoading } = props;
   return (
     <TouchableOpacity
       style={[styles.container, buttonContainerStyle, isDisabled && { backgroundColor: '#D3D3D3' }]}
@@ -39,6 +41,10 @@ export const AppButton: React.FC<IProps> = props => {
       <Text style={styles.title}>
         {title}
       </Text>
+      {
+        isLoading &&
+        <ActivityIndicator animating={true} style={{ marginLeft: 20 }} color='#fff' />
+      }
     </TouchableOpacity>
   )
 }
@@ -50,10 +56,11 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     borderRadius: 5,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    flexDirection: 'row'
   } as ViewStyle,
   title: {
     color: '#fff',
-    fontWeight: 'bold'
+    fontWeight: 'bold',
   } as TextStyle
 });

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ViewStyle, TouchableOpacity, TextStyle, TextInput, FlatList } from 'react-native';
+import { View, Text, StyleSheet, ViewStyle, RefreshControl, TextStyle, TextInput, FlatList, ActivityIndicator } from 'react-native';
 import { NavigationComponentProps, NavigationFunctionComponent } from 'react-native-navigation';
 import { useProps } from '../hooks';
 import { AppButton } from '../components';
@@ -14,8 +14,10 @@ interface IProps extends NavigationComponentProps {
 
 export const AddRecord: NavigationFunctionComponent<IProps> = (_props) => {
   const [isLoading, setIsLoading] = useState(false);
+  const [fetching, setFetching] = useState(true);
   const { Auth } = useProps(state => state)
   const [records, setRecords] = useState<Array<IRecord>>([])
+  const [refreshing, setRefreshing] = useState(false);
 
   const addRecordValidationSchema = yup.object().shape({
     itemName: yup
@@ -29,7 +31,17 @@ export const AddRecord: NavigationFunctionComponent<IProps> = (_props) => {
   useEffect(() => {
     getRecords(Auth.token)
       .then(res => setRecords(res))
+      .catch(err =>null)
+      .finally(() => setFetching(false))
   }, [])
+
+  const onPullToRefresh = () => {
+    setRefreshing(true);
+    getRecords(Auth.token)
+    .then(res => setRecords(res))
+    .catch(err =>null)
+    .finally(() => setRefreshing(false))
+  }
 
   const handleAddRecord = (values: { itemName: string, itemPrice: string }) => {
     console.log(values)
@@ -98,9 +110,18 @@ export const AddRecord: NavigationFunctionComponent<IProps> = (_props) => {
       )}
       </Formik>
       <Text style={{ textAlign: 'center', fontWeight: 'bold', fontSize: 22, marginTop: 5 }}>Records</Text>
-      <FlatList
+
+      {
+        fetching ?
+        <ActivityIndicator animating style={{ marginTop:25}} size={30}/>
+        :
+        <FlatList
         data={records}
         showsVerticalScrollIndicator={false}
+        refreshControl={<RefreshControl 
+          refreshing={refreshing}
+          onRefresh={onPullToRefresh}
+        />}
         renderItem={({ item, index }) => (
           <View key={index} style={styles.items}>
             <Text style={{ flexGrow: 1, fontWeight: 'bold' }}>{item.itemName}</Text>
@@ -108,6 +129,8 @@ export const AddRecord: NavigationFunctionComponent<IProps> = (_props) => {
           </View>
         )}
       />
+      }
+      
     </View>
   )
 }

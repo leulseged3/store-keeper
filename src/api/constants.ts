@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-
-export const API_EXAMPLE_BLOG = axios.create({
-  baseURL: 'https://example.com/api/blog',
+export const API_STORE = axios.create({
+  baseURL: 'https://leulseged-store-api.herokuapp.com/',
+  // baseURL: 'http://10.0.2.2:3000/'
 });

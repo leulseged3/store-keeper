@@ -39,6 +39,7 @@ export const AddRecord: NavigationFunctionComponent<IProps> = (_props) => {
         const newRecord = records;
         newRecord.push(res)
       })
+      .catch(err => console.log(err))
       .finally(() => setIsLoading(false))
   }
 

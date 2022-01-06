@@ -47,6 +47,7 @@ export const LoginComponent: NavigationFunctionComponent<IProps> = (props) => {
       //   }
       // }))
       .catch(err => {
+        console.log(err)
         setIsLoading(false);
         setLoginError(true)
       })
